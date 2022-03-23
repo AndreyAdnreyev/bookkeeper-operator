@@ -16,9 +16,6 @@ import (
 	"os"
 	"runtime"
 
-	"github.com/operator-framework/operator-sdk/pkg/k8sutil"
-	sdkVersion "github.com/operator-framework/operator-sdk/version"
-
 	"github.com/pravega/bookkeeper-operator/pkg/apis"
 	"github.com/pravega/bookkeeper-operator/pkg/apis/bookkeeper/v1alpha1"
 
@@ -33,7 +30,7 @@ import (
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	logz "sigs.k8s.io/controller-runtime/pkg/log/zap"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
-	"sigs.k8s.io/controller-runtime/pkg/runtime/signals"
+	"sigs.k8s.io/controller-runtime/pkg/manager/signals"
 )
 
 var (
@@ -53,7 +50,6 @@ func printVersion() {
 	log.Printf("Git SHA: %s", version.GitSHA)
 	log.Printf("Go Version: %s", runtime.Version())
 	log.Printf("Go OS/Arch: %s/%s", runtime.GOOS, runtime.GOARCH)
-	log.Printf("operator-sdk Version: %v", sdkVersion.Version)
 }
 
 func main() {
@@ -77,7 +73,7 @@ func main() {
 		log.Warn("----- Running with finalizer disabled. -----")
 	}
 
-	namespace, err := k8sutil.GetWatchNamespace()
+	namespace, err := util.GetWatchNamespace()
 	if err != nil {
 		log.Fatal(err, "failed to get watch namespace")
 	}
@@ -88,7 +84,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	operatorNs, err := k8sutil.GetOperatorNamespace()
+	operatorNs, err := util.GetOperatorNamespace()
 	if err != nil {
 		log.Error(err, "failed to get operator namespace")
 		os.Exit(1)
